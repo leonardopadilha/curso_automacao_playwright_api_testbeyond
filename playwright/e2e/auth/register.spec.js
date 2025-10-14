@@ -64,4 +64,19 @@ test.describe('POST /auth/register', () => {
        const responseBody = await response.json()
        expect(responseBody).toHaveProperty("message", "O campo 'Email' deve ser um email válido")
     })
+
+    test('não deve cadastrar quando o campo nome não é informado', async ({ request }) => {
+        const user = {
+            email: `leonardo*email.com`,
+            password: 'pwd123'
+        }
+
+       const response =  await request.post('http://localhost:3333/api/auth/register', {
+        data: user
+       })
+       expect(response.status()).toBe(400)
+
+       const responseBody = await response.json()
+       expect(responseBody).toHaveProperty("message", "O campo 'Name' é obrigatório")
+    })
 })
