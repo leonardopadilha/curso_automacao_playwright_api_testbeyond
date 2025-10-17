@@ -32,4 +32,15 @@ test.describe('POST /auth/login', () => {
 
         expect(body.data.user).not.toHaveProperty('password')
     })
+
+    test('não deve fazer login com senha incorreta', async () => {
+        const responseBody = await auth.createUser(user)
+        expect(responseBody.status()).toBe(201)
+        
+        const response = await auth.login({ ...user, password: 'wrong_password'})
+        expect(response.status()).toBe(401)
+
+        const body = await response.json()
+        expect(body).toHaveProperty('message', 'Credenciais inválidas')
+    })
 })
