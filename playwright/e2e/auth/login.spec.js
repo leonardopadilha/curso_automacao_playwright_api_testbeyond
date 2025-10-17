@@ -43,4 +43,12 @@ test.describe('POST /auth/login', () => {
         const body = await response.json()
         expect(body).toHaveProperty('message', 'Credenciais inválidas')
     })
+
+    test('não deve fazer login com email não cadastrado', async () => {
+        const response = await auth.login(user)
+        expect(response.status()).toBe(401)
+
+        const body = await response.json()
+        expect(body).toHaveProperty('message', 'Credenciais inválidas')
+    })
 })
