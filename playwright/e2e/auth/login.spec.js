@@ -51,4 +51,12 @@ test.describe('POST /auth/login', () => {
         const body = await response.json()
         expect(body).toHaveProperty('message', 'Credenciais inválidas')
     })
+
+    test('não deve fazer login quando apenas a senha é informada', async () => {
+        const response = await auth.login({ ...user, email: ''})
+        expect(response.status()).toBe(400)
+
+        const body = await response.json()
+        expect(body).toHaveProperty("message", "O campo 'Email' é obrigatório")
+    })
 })
