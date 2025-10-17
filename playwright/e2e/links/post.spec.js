@@ -1,29 +1,25 @@
 import { test, expect } from "@playwright/test"
 import { authService } from "../../support/services/auth"
+import { linksService } from "../../support/services/links"
+import { getUserWithLink } from "../../support/factories/user"
 
 test.describe('POST /api/links', () => {
     test('deve encurtar um novo link', async ({ request }) => {
-
         const auth = authService(request)
+        const link = linksService(request)
 
-        const user = {
-            name: 'Leonardo Padilha',
-            email: 'leonardo@email.com',
-            password: 'pwd123',
-            link: {
-                original_url: 'https://www.youtube.com/watch?v=KwX1f2gYKZ4&list=RDKwX1f2gYKZ4&start_radio=1',
-                title: 'Graves Into Gardens'
-            }
-        }
+        const user = getUserWithLink()
+        await auth.createUser(user)
         const token = await auth.getToken(user)
 
-        const response = await request.post('http://localhost:3333/api/links', {
-            headers: {
-                Authorization: `Bearer ${token}` 
-            },
-            data: user.link
-        })
-
+        const response = await link.createLink(user.link, token)
         expect(response.status()).toBe(201)
+
+        const { data, message } = await response.json()
+        expect(data).toHaveProperty('id')
+        expect(data).toHaveProperty('original_url', user.link.original_url)
+        expect(data.short_code).toMatch(/^[A-Za-z0-9]{5}$/)
+        expect(data).toHaveProperty('title', user.link.title)
+        expect(message).toBe('Link criado com sucesso')
     })
 })
