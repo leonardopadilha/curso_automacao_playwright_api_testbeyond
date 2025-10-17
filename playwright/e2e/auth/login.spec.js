@@ -59,4 +59,12 @@ test.describe('POST /auth/login', () => {
         const body = await response.json()
         expect(body).toHaveProperty("message", "O campo 'Email' é obrigatório")
     })
+
+    test('não deve fazer login quando apenas o email é informado', async () => {
+        const response = await auth.login({ ...user, password: ''})
+        expect(response.status()).toBe(400)
+
+        const body = await response.json()
+        expect(body).toHaveProperty("message", "O campo 'Password' é obrigatório")
+    })
 })
