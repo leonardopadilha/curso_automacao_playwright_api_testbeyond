@@ -29,4 +29,12 @@ test.describe('POST /api/links', () => {
         expect(data).toHaveProperty('title', user.link.title)
         expect(message).toBe('Link criado com sucesso')
     })
+
+    test('não deve encurtar quando a url original não é informada', async () => {
+        const response = await link.createLink({ ...user.link, original_url: '' }, token)
+        expect(response.status()).toBe(400)
+
+        const {message } = await response.json()
+        expect(message).toBe("O campo 'OriginalURL' é obrigatório")
+    })
 })
