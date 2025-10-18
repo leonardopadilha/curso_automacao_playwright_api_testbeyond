@@ -1,18 +1,16 @@
-import { test, expect } from '@playwright/test'
+import { test, expect } from '../../support/fixtures'
 import { getUser } from '../../support/factories/user';
-import { authService } from '../../support/services/auth';
 import { isValidJWT, isValidPostgresId } from '../../support/functions/validInformations';
 
 test.describe('POST /auth/login', () => {
     let auth
     let user
 
-    test.beforeEach(({ request }) => {
-        auth = authService(request)
+    test.beforeEach(() => {
         user = getUser()
     })
 
-    test('deve fazer login com sucesso', async () => {
+    test('deve fazer login com sucesso', async ({ auth }) => {
         const responseBody = await auth.createUser(user)
         expect(responseBody.status()).toBe(201)
 
@@ -33,7 +31,7 @@ test.describe('POST /auth/login', () => {
         expect(body.data.user).not.toHaveProperty('password')
     })
 
-    test('não deve fazer login com senha incorreta', async () => {
+    test('não deve fazer login com senha incorreta', async ({ auth }) => {
         const responseBody = await auth.createUser(user)
         expect(responseBody.status()).toBe(201)
         
@@ -44,7 +42,7 @@ test.describe('POST /auth/login', () => {
         expect(body).toHaveProperty('message', 'Credenciais inválidas')
     })
 
-    test('não deve fazer login com email não cadastrado', async () => {
+    test('não deve fazer login com email não cadastrado', async ({ auth }) => {
         const response = await auth.login(user)
         expect(response.status()).toBe(401)
 
@@ -52,7 +50,7 @@ test.describe('POST /auth/login', () => {
         expect(body).toHaveProperty('message', 'Credenciais inválidas')
     })
 
-    test('não deve fazer login quando apenas a senha é informada', async () => {
+    test('não deve fazer login quando apenas a senha é informada', async ({ auth }) => {
         const response = await auth.login({ ...user, email: ''})
         expect(response.status()).toBe(400)
 
@@ -60,7 +58,7 @@ test.describe('POST /auth/login', () => {
         expect(body).toHaveProperty("message", "O campo 'Email' é obrigatório")
     })
 
-    test('não deve fazer login quando apenas o email é informado', async () => {
+    test('não deve fazer login quando apenas o email é informado', async ({ auth }) => {
         const response = await auth.login({ ...user, password: ''})
         expect(response.status()).toBe(400)
 
