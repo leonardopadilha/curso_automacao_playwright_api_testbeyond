@@ -8,7 +8,16 @@ export const linksService = (request) => {
         })
     }
 
+    const getLinks = async (token) => {
+        return await request.get('/api/links', {
+            headers: {
+                Authorization: `Bearer ${token}`	
+            }
+        })
+    }
+
     return {
-        createLink
+        createLink,
+        getLinks
     }
 }
