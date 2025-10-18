@@ -4,14 +4,21 @@ import { linksService } from "../../support/services/links"
 import { getUserWithLink } from "../../support/factories/user"
 
 test.describe('POST /api/links', () => {
-    test('deve encurtar um novo link', async ({ request }) => {
-        const auth = authService(request)
-        const link = linksService(request)
+    let auth
+    let link
+    let token
 
-        const user = getUserWithLink()
+    const user = getUserWithLink()
+
+    test.beforeEach(async ({ request }) => {
+        auth = authService(request)
+        link = linksService(request)
+
         await auth.createUser(user)
-        const token = await auth.getToken(user)
+        token = await auth.getToken(user)
+    })
 
+    test('deve encurtar um novo link', async () => {
         const response = await link.createLink(user.link, token)
         expect(response.status()).toBe(201)
 
