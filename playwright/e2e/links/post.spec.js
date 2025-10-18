@@ -45,4 +45,12 @@ test.describe('POST /api/links', () => {
         const {message } = await response.json()
         expect(message).toBe("O campo 'Title' é obrigatório")
     })
+
+    test('não deve encurtar quando a url é inválida', async () => {
+        const response = await link.createLink({ ...user.link, original_url: 'url-invalida' }, token)
+        expect(response.status()).toBe(400)
+
+        const {message } = await response.json()
+        expect(message).toBe("O campo 'OriginalURL' deve ser uma URL válida")
+    })
 })
