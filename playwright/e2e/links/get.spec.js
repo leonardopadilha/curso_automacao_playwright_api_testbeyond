@@ -3,7 +3,7 @@ import { getUserWithLinks } from "../../support/factories/user"
 
 test.describe('GET /api/links', () => {
     test('deve retornar uma lista de links pré-encurtados', async ({ auth, links }) => {
-        const user = getUserWithLinks()
+        const user = getUserWithLinks(5)
         await auth.createUser(user)
         const token = await auth.getToken(user)
 
