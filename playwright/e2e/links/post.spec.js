@@ -37,4 +37,12 @@ test.describe('POST /api/links', () => {
         const {message } = await response.json()
         expect(message).toBe("O campo 'OriginalURL' é obrigatório")
     })
+
+    test('não deve encurtar quando o título não é informado', async () => {
+        const response = await link.createLink({ ...user.link, title: '' }, token)
+        expect(response.status()).toBe(400)
+
+        const {message } = await response.json()
+        expect(message).toBe("O campo 'Title' é obrigatório")
+    })
 })
