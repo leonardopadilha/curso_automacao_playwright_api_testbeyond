@@ -27,4 +27,20 @@ test.describe('GET /api/links', () => {
             expect(link).toHaveProperty('title', user.links[index].title)
         }
     })
+
+    test('deve retornar uma lista vazia', async ({ auth, links }) => {
+        const user = getUserWithLinks(0)
+        await auth.createUser(user)
+        const token = await auth.getToken(user)
+
+        const response = await links.getLinks(token)
+        expect(response.status()).toBe(200)
+
+        const body = await response.json()
+        expect(body.count).toBe(0)
+        expect(Array.isArray(body.data)).toBeTruthy()
+        expect(body.data).toEqual([])
+        expect(body.data).toHaveLength(0)
+        expect(body).toHaveProperty('message', 'Links Encurtados')
+    })
 })
