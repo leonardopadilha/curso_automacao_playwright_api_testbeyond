@@ -1,0 +1,16 @@
+config:
+  target: "http://localhost:3333" # URL da API
+  phases:
+    - name: "health-check"
+      duration: 30 # Tempo de execução da simulação em segundos
+      arrivalRate: 5 # Taxa de chegada de requisições por segundo
+
+scenarios:
+  - name: "Health Check" # Nome da simulação
+    flow:
+      - get:
+          url: "/health" # URL da rota de health check
+          expect: # Expectativas para a resposta
+            - statusCode: 200 # Status esperado da resposta
+            - equals: ["shortbeyond-api", "{{ service }}"] # Verifica se o serviço é shortbeyond-api e se o serviço é o mesmo que o serviço da resposta
+            - equals: ["healthy", "{{ status }}"] # Verifica se o status é healthy e se o status é o mesmo que o status da resposta
