@@ -6,8 +6,12 @@
   "scripts": {
     "test": "npx playwright test",
     "test:ui": "npx playwright test --ui",
-    "test:health": "artillery run performance/tests/health.yaml"
-
+    "art:health": "artillery run performance/tests/health.yaml",
+    "art:cadastro": "artillery run performance/tests/cadastro.yaml --output performance/reports/cadastro.json",
+    "art:login": "artillery run performance/tests/login.yaml --output performance/reports/login.json",
+    "art:pre": "artillery run performance/tests/pre-cadastro.yaml --output performance/reports/pre-cadastro.json",
+    "art:spike": "artillery run performance/tests/spike.yml --output performance/reports/spike.json",
+    "insert:users": "node performance/insert-users.js"
   },
   "keywords": [],
   "author": "",
@@ -17,7 +21,9 @@
     "@playwright/test": "^1.56.0",
     "@types/node": "^24.7.1",
     "artillery": "^2.0.26",
+    "bcrypt": "^6.0.0",
     "dotenv": "^17.2.3",
-    "pg": "^8.16.3"
+    "pg": "^8.16.3",
+    "ulid": "^3.0.1"
   }
 }
